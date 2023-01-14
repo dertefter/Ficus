@@ -3,6 +3,7 @@ package com.dertefter.ficus
 import AppPreferences
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -14,9 +15,14 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.*
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
+import com.yandex.mobile.ads.banner.AdSize
+import com.yandex.mobile.ads.banner.BannerAdView
+import com.yandex.mobile.ads.common.AdRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +51,9 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
     var dayView: TextView? = null
     var exams: FrameLayout? = null
     var spinner: ProgressBar? = null
+    var sessia_anim: LinearLayout? = null
+    var show_sessia: Button? = null
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (isSessia) {
@@ -65,10 +74,61 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
 
     var link2 = "https://www.nstu.ru/studies/schedule/schedule_session/"
 
+
+    //parse date from 01.01.2021 to 1 января 2021
+    fun parseDate(value: String): String{
+        val dateArr = value.split(".")
+        val month = when(dateArr[1]){
+            "01" -> "января"
+            "02" -> "февраля"
+            "03" -> "марта"
+            "04" -> "апреля"
+            "05" -> "мая"
+            "06" -> "июня"
+            "07" -> "июля"
+            "08" -> "августа"
+            "09" -> "сентября"
+            "10" -> "октября"
+            "11" -> "ноября"
+            "12" -> "декабря"
+            else -> "января"
+        }
+        val day = dateArr[0].toInt().toString()
+        val year = dateArr[2].toString()
+        return("$day $month 20$year года")
+    }
+
+    fun checkSessia(){
+        val retrofit = Retrofit.Builder()
+            .baseUrl(link2)
+            .build()
+        val service = retrofit.create(APIService::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val response = service.timetable(gr)
+                val pretty = response.body()?.string().toString()
+                val doc: Document = Jsoup.parse(pretty)
+                val s = doc.body().select("div.schedule__session-body")
+                if (s.toString() != ""){
+                    Snackbar.make(requireView(), "Доступно расписание сессии!", Snackbar.LENGTH_LONG).setAction("Показать") {
+                        sessia()
+                    }.show()
+                }
+            }catch (e: Exception){
+                Log.e("ficus.timetable.sessia", e.toString())
+            }catch (e: Throwable){
+                Log.e("ficus.timetable.sessia", e.toString())
+            }
+
+        }
+    }
+
     fun sessia() {
+        weeks_view?.visibility = View.GONE
         spinner?.visibility = View.VISIBLE
-        daySelection?.visibility = View.INVISIBLE
-        days?.visibility = View.INVISIBLE
+        sessia_anim?.visibility = View.GONE
+        daySelection?.visibility = View.GONE
+        days?.visibility = View.GONE
         exams?.visibility = View.VISIBLE
         toolbar?.title = "Расписание сессии"
         val mInflater = LayoutInflater.from(activity)
@@ -79,44 +139,79 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
             .build()
         val service = retrofit.create(APIService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.timetable(gr)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    spinner?.visibility = View.INVISIBLE
-                    val pretty = response.body()?.string().toString()
-                    val doc: Document = Jsoup.parse(pretty)
-                    val s = doc.body().select("div.schedule__session-body")
-                    val rows = s.select("> *")
-                    for (i in rows) {
-                        val aud = i.select("div.schedule__session-class").text().toString()
-                        var time = i.select("div.schedule__session-time").text().toString()
-                        if (time == "") {
-                            time = "08:30"
+            try{
+                val response = service.timetable(gr)
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        spinner?.visibility = View.INVISIBLE
+                        val pretty = response.body()?.string().toString()
+                        val doc: Document = Jsoup.parse(pretty)
+                        val s = doc.body().select("div.schedule__session-body")
+                        val rows = s.select("> *")
+                        for (i in rows) {
+                            val date_ = i.select("div.schedule__session-day").first().text()
+                            val date = parseDate(date_)
+                            val time = i.select("div.schedule__session-time").first().text()
+                            val aud = i.select("div.schedule__session-class").first().text()
+                            val lesson = i.select("div.schedule__session-item").first().ownText()
+                            val teacher = i.select("a").first().ownText()
+                            val label_ = i.select("div[data-type=\"label\"]").first().select("div.schedule__session-label")
+                            val type_ = label_.attr("data-exam")
+                            val isExam: Boolean = type_ == "true"
+                            val item: View
+                            if (isExam){
+                                item = mInflater.inflate(R.layout.item2exam, null)
+                            }
+                            else{
+                                item = mInflater.inflate(R.layout.item2, null)
+                            }
+                            item.findViewById<TextView>(R.id.date).text = date
+                            item.findViewById<TextView>(R.id.time).text = time
+                            item.findViewById<TextView>(R.id.aud).text = aud
+                            item.findViewById<TextView>(R.id.lesson).text = lesson
+                            item.findViewById<TextView>(R.id.person).text = teacher
+                            if (isExam){
+                                item.findViewById<TextView>(R.id.type).text = "Экзамен"
+
+                            } else {
+                                item.findViewById<TextView>(R.id.type).text = "Консультация"
+                            }
+                            (exams?.get(0) as LinearLayout).addView(item)
+                            ObjectAnimator.ofFloat(item, "alpha", 0f, 1f).apply {
+                                duration = 260
+                                start()
+                            }
+
                         }
-                        val exam = i.select("div.schedule__session-item").text().toString()
-                        val date = i.select("div.schedule__session-cell")[0].text().toString()
-                        val type = i.select("div.schedule__session-label").text().toString()
-                        var item: View = mInflater.inflate(R.layout.item2, null, false)
-                        item.findViewById<TextView>(R.id.time).text = time
-                        item.findViewById<TextView>(R.id.exam).text = exam
-                        item.findViewById<TextView>(R.id.date).text = date
-                        item.findViewById<TextView>(R.id.aud).text = aud + ", " + type
-                        (exams?.get(0) as LinearLayout).addView(item)
+
+
+                    } else {
+
+                        Log.e("RETROFIT_ERROR", response.code().toString())
+
                     }
-
-
-                } else {
-
-                    Log.e("RETROFIT_ERROR", response.code().toString())
-
                 }
+            }catch (e: Exception){
+                Log.e("ficus.timetable.sessia", e.toString())
+            }catch (e: Throwable){
+                Log.e("ficus.timetable.sessia", e.toString())
             }
+
         }
     }
 
-    fun lessons() {
+    fun selectWeek(week_: Int?, card: View){
+        for (c in weeks_view?.children!!){
+            c.alpha = 0.7f
+        }
+        card.alpha = 1f
+        (weeks_view?.parent as HorizontalScrollView).smoothScrollTo(card.left, 0)
+        lessons(week_)
+    }
+
+    fun lessons(week_: Int?) {
+        weeks_view?.visibility = View.VISIBLE
         spinner?.visibility = View.VISIBLE
-        daySelection?.visibility = View.VISIBLE
         toolbar?.title = "Расписание занятий"
         val mInflater = LayoutInflater.from(activity)
         isSessia = false
@@ -124,7 +219,7 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
             ((days?.get(i) as FrameLayout).get(0) as LinearLayout).removeAllViews()
         }
         days?.visibility = View.VISIBLE
-        exams?.visibility = View.INVISIBLE
+        exams?.visibility = View.GONE
         val client = OkHttpClient().newBuilder()
             .addInterceptor(Interceptor { chain: Interceptor.Chain ->
                 val original: Request = chain.request()
@@ -144,103 +239,192 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.Study()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    spinner?.visibility = View.INVISIBLE
-                    val pretty = response.body()?.string().toString()
-                    val doc: Document = Jsoup.parse(pretty)
-                    val s = doc.body().select("div.schedule__table-body").first()
-                    val rows = s.select("> *")
-                    for (i in 0..rows.size - 1) {
-                        val lessons = rows[i].select("div.schedule__table-cell")[1].select("> *")
-                        for (j in lessons) {
-                            var item: View = mInflater.inflate(R.layout.item, null, false)
-                            item.findViewById<TextView>(R.id.time).text =
-                                j.getElementsByAttributeValue("data-type", "time").text().toString()
-                            var itemsInRow = j.select("div.schedule__table-cell")[1].select("> *")
-                            if (itemsInRow.size == 1) {
-                                if (itemsInRow.select("span[data-week]").size > 0) {
-                                    if (itemsInRow.select("span[data-week]")
-                                            .attr("data-week") == "current"
-                                    ) {
-                                        val lesson_text =
-                                            itemsInRow.select("div.schedule__table-item").first()
-                                                .ownText().toString().replace("·", " ")
-                                                .replace(",", "")
-                                        if (lesson_text != "") {
-                                            val aud = itemsInRow.select("div.schedule__table-class")
-                                                .text().toString()
-                                            item.findViewById<TextView>(R.id.aud).text = aud
-                                            item.findViewById<TextView>(R.id.lesson).text =
-                                                lesson_text
-                                            var this_day: FrameLayout = days?.get(i) as FrameLayout
-                                            (this_day.get(0) as LinearLayout).addView(item)
-                                        }
-                                    }
-                                } else {
-                                    val typeWork =
-                                        itemsInRow.select("span.schedule__table-typework").text()
-                                            .toString()
-                                    val lesson_text =
-                                        itemsInRow.select("div.schedule__table-item").first()
-                                            .ownText()
-                                            .toString().replace("·", " ").replace(",", "")
-                                            .replace("  ", "")
-                                    if (lesson_text != "") {
-                                        val aud =
-                                            itemsInRow.select("div.schedule__table-class").text()
-                                                .toString()
-                                        item.findViewById<TextView>(R.id.aud).text =
-                                            aud + ", " + typeWork
-                                        item.findViewById<TextView>(R.id.lesson).text =
-                                            lesson_text
-                                        var this_day: FrameLayout = days?.get(i) as FrameLayout
-                                        (this_day.get(0) as LinearLayout).addView(item)
-                                    }
-                                }
-                                spinnerBar?.visibility = View.INVISIBLE
+            try{
+                val response = service.Study()
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        for (d_ in days?.children!!){
+                            ((d_ as FrameLayout).get(0) as LinearLayout).removeAllViews()
+                        }
+                        spinner?.visibility = View.INVISIBLE
+                        daySelection?.visibility = View.VISIBLE
+                        ObjectAnimator.ofFloat(daySelection, "alpha",  1f).apply {
+                            duration = 300
+                            start()
+                        }
+                        val pretty = response.body()?.string().toString()
+                        val doc: Document = Jsoup.parse(pretty)
+                        val s = doc.body().select("div.schedule__table-body").first()
+                        val weekLabel = doc.body().select("div.schedule__title").select("span.schedule__title-label").text()
+                        val sessiaNow = weekLabel.contains("сессия")
+                        if (sessiaNow){
+                            weeks_view?.visibility = View.GONE
+                            daySelection?.visibility = View.GONE
+                            sessia_anim?.visibility = View.VISIBLE
+                            ObjectAnimator.ofFloat(sessia_anim, "alpha", 0f, 1f).apply {
+                                duration = 300
+                                start()
                             }
-                            if (itemsInRow.size == 2) {
-                                var spans = itemsInRow.select("span[data-week]")
-                                for (t in spans) {
-                                    if (t.attr("data-week") == "current") {
-
-                                        val it_ = t.parent().parent().parent()
-                                        val lesson_text =
-                                            it_.select("div.schedule__table-item").first().ownText()
-                                                .toString().replace("·", " ").replace(",", "")
-                                        val aud_text =
-                                            it_.select("div.schedule__table-class").text()
-                                                .toString()
-                                        item.findViewById<TextView>(R.id.lesson).text = lesson_text
-                                        item.findViewById<TextView>(R.id.aud).text = aud_text
-                                        var this_day: FrameLayout = days?.get(i) as FrameLayout
-                                        (this_day.get(0) as LinearLayout).addView(item)
-
-                                    }
-                                }
-
-                            }
-
+                        }else{
 
                         }
+                        val rows = s.select("> *")
+                        if (week_ == null){
+                            week = weekLabel.split(" ")[0].toInt()
+                            if (weeks_view?.childCount == 0){
+                                for (w in week..week+6){
+                                    val week_item = mInflater.inflate(R.layout.timetable_day_tab, null, false)
+                                    week_item.findViewById<TextView>(R.id.week_text).text = "Неделя $w"
+                                    if (w == week){
+                                        week_item.findViewById<ImageView>(R.id.week_now)?.visibility = View.VISIBLE
+                                        week_item?.alpha = 1f
+                                    }else{
+                                        week_item.findViewById<ImageView>(R.id.week_now)?.visibility = View.GONE
+                                        week_item?.alpha = 0.7f
+                                    }
+                                    week_item.setOnClickListener {
+                                        selectWeek(w, it)
+                                    }
+                                    weeks_view?.addView(week_item)
+                                }
+                            }
+                            for (i in 0..rows.size - 1) {
+                                val time = rows[i].select("div.schedule__table-time").text().toString()
+                                val cell = rows[i].select("div.schedule__table-cell")[1]
+                                val lessons = cell.select("> *")
+                                for (l in lessons){
+                                    val time = l.select("div.schedule__table-time").text()
+                                    val items = l.select("div.schedule__table-item")
+                                    for (t in items){
+                                        var current = true
+                                        var name = t.ownText().replace("·", "").replace(",", "")
+                                        if (t.select("span.schedule__table-label").hasAttr("data-week")){
+                                            if (t.select("span.schedule__table-label").attr("data-week") != "current"){
+                                                current = false
+                                            }
+
+                                        }
+
+                                        val type = t.select("span.schedule__table-typework").first().ownText()
+                                        val aud = t.parent().parent().select("div.schedule__table-class").text()
+                                        var person = ""
+                                        for (p in t.select("a")){
+                                            person = person + " " + p.text()
+                                        }
+
+                                        if (name != "" && current){
+                                            val lessonCard = mInflater.inflate(R.layout.item, null, false)
+                                            lessonCard.findViewById<TextView>(R.id.time).text = time
+                                            lessonCard.findViewById<TextView>(R.id.type).text = type
+                                            lessonCard.findViewById<TextView>(R.id.lesson).text = name
+                                            lessonCard.findViewById<TextView>(R.id.aud).text = aud
+
+                                            lessonCard.findViewById<TextView>(R.id.person).text = person
+                                            var this_day: FrameLayout = days?.get(i) as FrameLayout
+                                            (this_day.get(0) as LinearLayout).addView(lessonCard)
+                                            ObjectAnimator.ofFloat(lessonCard, "alpha", 0f, 1f).apply {
+                                                duration = 260
+                                                start()
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+
+                        } else {
+                            val week_number = week_
+                            var week_type = ""
+                            if (week_number % 2 == 0){
+                                week_type = "по чётным"
+                            }else{
+                                week_type = "по нечётным"
+                            }
+                            for (i in 0..rows.size - 1) {
+                                val time = rows[i].select("div.schedule__table-time").text().toString()
+                                val cell = rows[i].select("div.schedule__table-cell")[1]
+                                val lessons = cell.select("> *")
+                                for (l in lessons){
+                                    val time = l.select("div.schedule__table-time").text()
+                                    val items = l.select("div.schedule__table-item")
+                                    for (t in items){
+                                        var current = false
+                                        var name = t.ownText().replace("·", "").replace(",", "")
+                                        if (t.select("span.schedule__table-label").toString() != ""){
+                                            val label = t.select("span.schedule__table-label").select("span").first().text()
+                                            Log.e("label", label)
+                                            val label_array = label.split(" ")
+                                            for (l in label_array){
+                                                if (l == week_number.toString()){
+                                                    current = true
+                                                }
+                                            }
+                                            if (week_type == label){
+                                                current = true
+                                            }
+
+                                        }else{
+                                            current = true
+                                        }
+
+
+                                        val type = t.select("span.schedule__table-typework").first().ownText()
+                                        val aud = t.parent().parent().select("div.schedule__table-class").text()
+                                        var person = ""
+                                        for (p in t.select("a")){
+                                            person = person + " " + p.text()
+                                        }
+
+                                        if (name != "" && current){
+                                            val lessonCard = mInflater.inflate(R.layout.item, null, false)
+                                            lessonCard.findViewById<TextView>(R.id.time).text = time
+                                            lessonCard.findViewById<TextView>(R.id.type).text = type
+                                            lessonCard.findViewById<TextView>(R.id.lesson).text = name
+                                            lessonCard.findViewById<TextView>(R.id.aud).text = aud
+
+                                            lessonCard.findViewById<TextView>(R.id.person).text = person
+                                            var this_day: FrameLayout = days?.get(i) as FrameLayout
+                                            (this_day.get(0) as LinearLayout).addView(lessonCard)
+                                            ObjectAnimator.ofFloat(lessonCard, "alpha", 0f, 1f).apply {
+                                                duration = 260
+                                                start()
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        }
+
+
+                    } else {
+
+                        Log.e("RETROFIT_ERROR", response.code().toString())
 
                     }
-
-
-                } else {
-
-                    Log.e("RETROFIT_ERROR", response.code().toString())
-
                 }
+            }catch (e: Throwable){
+                Log.e("ficus.timetable", e.toString())
+            }catch (e: Exception){
+                Log.e("ficus.timetable", e.toString())
             }
+
         }
     }
 
     fun arrowRight() {
+        ObjectAnimator.ofFloat(days, "alpha", 0f, 1f).apply {
+            duration = 140
+            start()
+        }
+        ObjectAnimator.ofFloat(days, "translationX", 300f, 0f).apply {
+            duration = 120
+            start()
+        }
         val a = ObjectAnimator.ofFloat(dayView, "translationX", 300f, 0f)
-        a.duration = 140
+        a.duration = 160
         a.start()
         if (day < 6) {
             day++
@@ -278,8 +462,17 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
     }
 
     fun arrowLeft() {
+        ObjectAnimator.ofFloat(days, "alpha", 0f, 1f).apply {
+            duration = 140
+            start()
+        }
+        ObjectAnimator.ofFloat(days, "translationX", -300f, 0f).apply {
+            duration = 120
+            start()
+        }
+
         val a = ObjectAnimator.ofFloat(dayView, "translationX", -300f, 0f)
-        a.duration = 140
+        a.duration = 160
         a.start()
         if (day > 1) {
             day--
@@ -316,9 +509,22 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
         }
     }
 
-
+    var week = 0
+    var weeks_view: LinearLayout? = null
+    var ad: BannerAdView? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ad = view.findViewById(R.id.ya_banner)
+        ad?.setAdUnitId(getString(R.string.ad_timetable))
+        ad?.setAdSize(AdSize.stickySize(400))
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        ad?.loadAd(adRequest)
+        sessia_anim = view.findViewById(R.id.sessia_anim)
+        show_sessia = view.findViewById(R.id.show_sessia_button)
+        show_sessia?.setOnClickListener {
+            sessia()
+        }
+        weeks_view = view.findViewById(R.id.weeks)
         spinner = view.findViewById(R.id.spinner_timetable)
         exams = view.findViewById(R.id.exams)
         daySelection = view.findViewById(R.id.daySelection)
@@ -339,7 +545,7 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
         }
         day = today
         if (savedInstanceState?.get("day") != null) {
-            day = savedInstanceState?.get("day") as Int
+            day = savedInstanceState.get("day") as Int
         }
         for (i in 0..5) {
             if (i == day - 1) {
@@ -390,23 +596,28 @@ class timeTable : Fragment(R.layout.timetable_fragment) {
 
 
         if (savedInstanceState?.getBoolean("sessia") == false || savedInstanceState?.getBoolean("sessia") == null) {
-            lessons()
+            lessons(null)
 
         } else {
             sessia()
         }
-
+        checkSessia()
 
 
 
         toolbar?.setOnMenuItemClickListener {
             if (it.itemId == R.id.l1) {
-                lessons()
+                lessons(null)
             }
             if (it.itemId == R.id.l2) {
                 sessia()
-
-
+            }
+            if (it.itemId == R.id.l3) {
+                val inta = Intent(
+                    Auth.applicationContext(),
+                    Persons::class.java
+                ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                Ficus.applicationContext().startActivity(inta)
             }
 
             true

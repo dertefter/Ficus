@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:id="@+id/messages_fragment"
     tools:context=".Work">
 
     <FrameLayout
@@ -13,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,14 +20,26 @@
             android:layout_marginTop="80dp"
             android:orientation="vertical">
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                app:lottie_autoPlay="true"
+                app:lottie_colorFilter="?attr/colorPrimary"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/messages" />
+
             <TextView
                 android:id="@+id/no_mes_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center"
-                android:text="Тут ничего нет..."
-                android:textSize="20sp" />
+                android:text="Нет сообщений"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </FrameLayout>
 
@@ -42,27 +53,43 @@
         android:visibility="invisible"
         app:layout_anchorGravity="center" />
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/SAppBarLayout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSecondaryContainer"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="false"
-        android:visibility="invisible"
-        app:liftOnScroll="false">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:ignore="SpeakableTextPresentCheck">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/Stoolbar_messages"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:clipToPadding="false"
-            android:fitsSystemWindows="false"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/messages_selectable_menu"
-            app:titleTextColor="?attr/colorOnSecondaryContainer" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/mes_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/mes_tab1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="От преподавателей и служб"
+                    />
 
-    </com.google.android.material.appbar.AppBarLayout>
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/mes_tab2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Прочее"
+                    />
+            </com.google.android.material.tabs.TabLayout>
+            <LinearLayout
+                android:id="@+id/messages_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBarLayout"
@@ -79,28 +106,33 @@
             android:layout_height="?attr/actionBarSize"
             android:clipToPadding="false"
             android:fitsSystemWindows="false"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/messages_menu"
-            app:title="От преподавателей" />
+            app:layout_scrollFlags="noScroll"
+            app:title="Сообщения" />
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/messagesScrollView"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/SAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_score"
-        tools:ignore="SpeakableTextPresentCheck">
+        android:background="?attr/colorSecondaryContainer"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="false"
+        android:visibility="invisible"
+        app:liftOnScroll="true">
 
-        <LinearLayout
-            android:id="@+id/messages_view"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/Stoolbar_messages"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp" />
-    </androidx.core.widget.NestedScrollView>
+            android:layout_height="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:fitsSystemWindows="false"
+            app:layout_scrollFlags="noScroll"
+            app:menu="@menu/messages_selectable_menu"
+            app:titleTextColor="?attr/colorOnSecondaryContainer" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

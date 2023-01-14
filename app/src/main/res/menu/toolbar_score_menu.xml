@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/zachotka"
-        android:title="Зачётка" />
-    <item
-        android:id="@+id/weeks_score"
-        android:title="Контрольные недели" />
+        android:id="@+id/l3"
+        app:showAsAction="always"
+        android:icon="@drawable/share"
+        android:title="Поделиться"/>
 </menu>

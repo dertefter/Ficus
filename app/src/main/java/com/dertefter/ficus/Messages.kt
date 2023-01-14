@@ -1,25 +1,29 @@
 package com.dertefter.ficus
 
 import AppPreferences
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
-import androidx.appcompat.view.ActionMode
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
-import androidx.cardview.widget.CardView
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import com.makeramen.roundedimageview.RoundedTransformationBuilder
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Transformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,13 +33,14 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.w3c.dom.Text
 import retrofit2.Retrofit
-
-
+import java.io.IOException
+import java.io.ObjectInput
 
 
 class Messages : Fragment(R.layout.messages_fragment) {
+
+
     var messagesView: LinearLayout? = null
     var mInflater: LayoutInflater? = null
     var toolbar: Toolbar? = null
@@ -44,16 +49,15 @@ class Messages : Fragment(R.layout.messages_fragment) {
     var selectableToolbarLayout: AppBarLayout? = null
     var spinner: ProgressBar? = null
     var animation: FrameLayout? = null
-    var current_value = 0
+    var current_value = 1
     var no_mesTextView: TextView? = null
     var isSelectMode: Boolean = false
     var mes_ids = mutableListOf<String>()
     var how_many_mes: Int = 0
-    override fun onStart() {
-        super.onStart()
-        mes(current_value)
+    var tabLayout: TabLayout? = null
 
-    }
+
+
     @ColorInt
     fun Context.getColorFromAttr(
         @AttrRes attrColor: Int,
@@ -64,11 +68,74 @@ class Messages : Fragment(R.layout.messages_fragment) {
         return typedValue.data
     }
 
+    fun getLinkForImage(name: String, message_item: View) {
+        val array = name.replace("ё", "e").split(" ")
+        val searchNameValue = array[0]
+        val indexSur = array[1].split(".")
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://www.nstu.ru/")
+            .build()
+        val service = retrofit.create(APIService::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = service.findPerson(searchNameValue)
+            if (response.isSuccessful) {
+                val pretty = response.body()?.string().toString()
+                val doc: Document = Jsoup.parse(pretty)
+                val result = doc.select("div.search-result")
+                val results = result.select("div.search-result__item")
+                for (i in results){
+
+                    val person_name = i.select("a").first().text()
+                    val person_array = person_name.split(" ")
+                    try{
+                        if (person_array[1][0].toString() == indexSur[0] && person_array[2][0].toString() == indexSur[1]){
+                            val img = i.select("img").first()
+
+                                val transformation: Transformation =
+                                    RoundedTransformationBuilder()
+                                        .borderColor(Color.BLACK)
+                                        .borderWidthDp(0f)
+                                        .cornerRadiusDp(60f)
+                                        .oval(false)
+                                        .build()
+
+                                withContext(Dispatchers.Main){
+                                    if (img != null){
+                                        val profile_pic= "https://www.nstu.ru/" + img.attr("src")
+                                        Picasso.with(Ficus.applicationContext()).load(profile_pic).resize(200, 200).centerCrop().transform(transformation).into(message_item.findViewById<ImageView>(R.id.latter_background))
+                                        message_item.findViewById<ImageView>(R.id.latter_background)?.imageTintMode = null
+                                        message_item.findViewById<TextView>(R.id.first_latter).visibility = View.GONE
+                                        message_item.findViewById<TextView>(R.id.send_by).text = person_name
+                                    }else{
+                                        message_item.findViewById<TextView>(R.id.send_by).text = person_name
+                                    }
+                                    message_item.visibility = View.VISIBLE
+                                    ObjectAnimator.ofFloat(message_item, "alpha", 0f, 1f).apply {
+                                        duration = 300
+                                        start()
+                                    }
+
+
+                                }
+
+
+
+                        }
+                    }catch (e: Exception){
+                        Log.e("error",e.stackTraceToString())
+                    }
+
+                }
+            }
+        }
+    }
+
     fun mes(value: Int) {
         current_value = value
         messagesView?.removeAllViews()
-        animation?.visibility = View.INVISIBLE
+        animation?.visibility = View.GONE
         spinner?.visibility = View.VISIBLE
+
         val client = OkHttpClient().newBuilder()
             .addInterceptor(Interceptor { chain: Interceptor.Chain ->
                 val original: Request = chain.request()
@@ -87,108 +154,150 @@ class Messages : Fragment(R.layout.messages_fragment) {
         val service = retrofit.create(APIService::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.messages("-1")
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    val pretty = response.body()?.string().toString()
-                    val doc: Document = Jsoup.parse(pretty)
-                    val s = doc.body().select("div.sysContentWithMenu")
-                    val tbody = s.select("tbody")[value]
-                    val messages = tbody?.select("tr")
-                    spinner?.visibility = View.INVISIBLE
-                    if (messages != null) {
-                        if (messages.size != 0) {
-                            animation?.visibility = View.INVISIBLE
-                        } else {
-                            animation?.visibility = View.VISIBLE
+            try{
+                val response = service.messages("-1")
+                    if (response.isSuccessful) {
+                        val pretty = response.body()?.string().toString()
+                        val doc: Document = Jsoup.parse(pretty)
+                        val new_tab1 = doc.select("span#block1").first().text().toString()
+                        val new_tab2 = doc.select("span#block2").first().text().toString()
+                        val s = doc.body().select("main.page-content")
+                        if (doc.select("span.num_of_msg").toString() != ""){
+                            val num = doc.select("span.num_of_msg").first().text().toString()
+                            if (num.length != 0){
+                                val numInt = num.toInt()
+                                val bnav: BottomNavigationView? = activity?.findViewById(R.id.bottomNavigationView)
+                                var badge = bnav?.getOrCreateBadge(R.id.messages_nav)
+                                badge?.isVisible = true
+                                badge?.number = numInt
+
+                            }else{
+                                val bnav: BottomNavigationView? = activity?.findViewById(R.id.bottomNavigationView)
+                                bnav?.removeBadge(R.id.messages_nav)
+                            }
+                        }else{
+                            val bnav: BottomNavigationView? = activity?.findViewById(R.id.bottomNavigationView)
+                            bnav?.removeBadge(R.id.messages_nav)
                         }
-                        for (i in messages) {
-                            var message_item: View =
-                                mInflater!!.inflate(R.layout.message, null, false)
-                            message_item.findViewById<TextView>(R.id.send_by).text =
-                                i.select("span")[0].text().replace("(преподаватель)", "").replace("(деканат)", "").replace("(УИП)", "")
-                            message_item.findViewById<TextView>(R.id.message_text).text =
-                                i.select("div").text().toString().replace(" -- ", ": ")
-                            message_item.findViewById<ImageView>(R.id.send_by_image)
-                                .setImageResource(R.drawable.ic_round_account_circle_24)
-                            message_item.findViewById<TextView>(R.id.mes_id).text =  i.select("td")[0].select("input")[0].attr("id").toString()
-                                .replace("id_chk_", "")
-                            message_item.isClickable = true
-                            message_item.setOnClickListener {
-                                if (!isSelectMode){
-                                    val inta = Intent(
-                                        Auth.applicationContext(),
-                                        ReadMessageActivity::class.java
-                                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    inta.putExtra(
-                                        "send_by",
-                                        i.select("span")[0].text().toString()
-                                            .replace("(преподаватель)", "").replace("(деканат)", "").replace("(УИП)", "")
-                                    )
-                                    inta.putExtra(
-                                        "theme",
-                                        i.select("span")[1].text().toString().replace("--", "\n")
-                                    )
-                                    var text = i.select("span")[2].text().toString().replace("--", "\n")
-                                    text = text.replaceRange(0, 2, "")
-                                    inta.putExtra(
-                                        "text",
-                                        text
-                                    )
-                                    inta.putExtra(
-                                        "mesid",
-                                        i.select("td")[0].select("input")[0].attr("id").toString()
-                                            .replace("id_chk_", "")
-                                    )
-                                    Work.applicationContext().startActivity(inta)
-                                }
-                                else{
-                                    if (mes_ids.contains(message_item.findViewById<TextView>(R.id.mes_id).text.toString())){
-                                        message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
-                                            com.google.android.material.R.attr.colorSurface)!!)
-                                        mes_ids.remove(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
-                                        selectableToolbar?.title = mes_ids.size.toString() + " выбрано"
-                                        if (mes_ids.size == 0){
-                                            selectModeDisable()
-                                            mes_ids = mutableListOf<String>()
+
+                        val tbody = s.select("div#new_table$value").first()
+
+                        val messages = tbody?.select("div.pad")
+                        withContext(Dispatchers.IO) {
+                            withContext(Dispatchers.Main){
+                                spinner?.visibility = View.GONE
+                            }
+
+                            if (messages != null) {
+                                withContext(Dispatchers.Main){
+                                    if (messages.size != 0) {
+                                        animation?.visibility = View.GONE
+                                    } else {
+                                        animation?.visibility = View.VISIBLE
+                                        ObjectAnimator.ofFloat(animation, "alpha", 0f, 1f).apply {
+                                            duration = 300
+                                            start()
                                         }
-                                    }else{
-                                        message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
-                                            com.google.android.material.R.attr.colorSurfaceVariant)!!)
-                                        how_many_mes++
+                                    }
+                                }
 
-                                        mes_ids.add(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
-                                        selectableToolbar?.title = mes_ids.size.toString() + " выбрано"
+                                for (i in messages) {
+                                    val message_item: View =
+                                        mInflater!!.inflate(R.layout.message, null, false)
+                                    var is_new = false
+                                    if (i.hasClass("new_message_header")){
+                                        is_new = true
+                                    }
+                                    val send_by = i.select("div.col-2.col-sm-6").first().text().toString()
+                                    val mes_text = i.select("div.col-8.col-sm-6").first().text().toString()
+                                    val mes_id = i.select("div.col-8.col-sm-6").first().attr("onclick").toString()
+                                        .replace("openWin2('https://ciu.nstu.ru/student_study/mess_teacher/view?id=","")
+                                        .replace("');return false;","")
+                                    if (is_new){
+                                        message_item.findViewById<ImageView>(R.id.mes_new_indicator).visibility = View.VISIBLE
+                                    }
+                                    message_item.findViewById<TextView>(R.id.send_by).text = send_by
+                                    message_item.findViewById<TextView>(R.id.message_text).text = mes_text
+                                    message_item.findViewById<TextView>(R.id.mes_id).text = mes_id
+                                    message_item.findViewById<ImageView>(R.id.latter_background)?.setImageResource(R.drawable.yava_part)
+                                    message_item.findViewById<TextView>(R.id.first_latter).text = message_item.findViewById<TextView>(R.id.send_by).text[0].toString()
+                                    message_item.isClickable = true
+                                    message_item.setOnClickListener {
+                                        if (!isSelectMode){
+                                            val inta = Intent(
+                                                Auth.applicationContext(),
+                                                ReadMessageActivity::class.java
+                                            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            inta.putExtra("mesid", mes_id)
+                                            Ficus.applicationContext().startActivity(inta)
+                                        }
+                                        else{
+                                            if (mes_ids.contains(message_item.findViewById<TextView>(R.id.mes_id).text.toString())){
+                                                message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
+                                                    com.google.android.material.R.attr.colorSurface)!!)
+                                                mes_ids.remove(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
+                                                selectableToolbar?.title = mes_ids.size.toString() + " выбрано"
+                                                if (mes_ids.size == 0){
+                                                    selectModeDisable()
 
+                                                }
+                                            }else{
+                                                message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
+                                                    com.google.android.material.R.attr.colorSurfaceVariant)!!)
+                                                how_many_mes++
+
+                                                mes_ids.add(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
+                                                selectableToolbar?.title = mes_ids.size.toString() + " выбрано"
+
+                                            }
+
+                                        }
+                                    }
+                                    message_item.setOnLongClickListener {
+                                        if (!isSelectMode){
+                                            isSelectMode = true
+                                            selectModeEnable()
+                                            how_many_mes++
+                                            mes_ids.add(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
+                                            selectableToolbar?.title = (mes_ids.size).toString() + " выбрано"
+                                            message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
+                                                com.google.android.material.R.attr.colorSurfaceVariant)!!)
+                                        }
+                                        true
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        messagesView?.addView(message_item)
+                                        message_item.visibility = View.GONE
+                                        getLinkForImage(send_by, message_item)
                                     }
 
+
                                 }
                             }
-                            message_item.setOnLongClickListener {
-                                if (!isSelectMode){
-                                    isSelectMode = true
-                                    selectModeEnable()
-                                    how_many_mes++
-                                    mes_ids.add(message_item.findViewById<TextView>(R.id.mes_id).text.toString())
-                                    selectableToolbar?.title = (mes_ids.size).toString() + " выбрано"
-                                    message_item.findViewById<MaterialCardView>(R.id.CardItem)?.setCardBackgroundColor(context?.getColorFromAttr(
-                                        com.google.android.material.R.attr.colorSurfaceVariant)!!)
-                                }
-                                true
-                            }
-
-                            messagesView?.addView(message_item)
-
                         }
+
+
+
+                    } else {
+                        val context: Context = Auth.applicationContext()
+                        var inta = Intent(
+                            context,
+                            NetworkErrorActivity::class.java
+                        ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(inta)
+
                     }
 
-
-                } else {
-
-                    Log.e("RETROFIT_ERROR", response.code().toString())
-
-                }
             }
+            catch (e: Exception){
+                Log.e("ficus.mes", e.stackTraceToString())
+            }
+            catch (e: Throwable){
+                Log.e("ficus.mes", e.stackTraceToString())
+            }catch (e: IOException){
+                Log.e("ficus.mes", e.stackTraceToString())
+            }
+
         }
     }
 
@@ -201,9 +310,11 @@ class Messages : Fragment(R.layout.messages_fragment) {
         toolbarLayout?.visibility = View.VISIBLE
         selectableToolbarLayout?.visibility = View.INVISIBLE
         isSelectMode = false
+        mes_ids = mutableListOf<String>()
     }
 
     private fun deleteThis(MessageID: String) {
+        how_many_mes = 0
         var tokenId = AppPreferences.token
         val client = OkHttpClient().newBuilder()
             .addInterceptor(Interceptor { chain: Interceptor.Chain ->
@@ -237,15 +348,24 @@ class Messages : Fragment(R.layout.messages_fragment) {
                     }
                 }
             } catch (e: Throwable) {
-
+                Log.e("ficus.mes.delete", e.toString())
+            }catch (e: Exception){
+                Log.e("ficus.mes.delete", e.toString())
             }
         }
 
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        mes(current_value)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        tabLayout = view.findViewById(R.id.mes_tabs)
+        tabLayout?.isInEditMode()
         toolbarLayout = view.findViewById(R.id.AppBarLayout)
         messagesView = view.findViewById(R.id.messages_view)
         animation = view.findViewById(R.id.animationMessages)
@@ -256,6 +376,22 @@ class Messages : Fragment(R.layout.messages_fragment) {
         no_mesTextView = view.findViewById(R.id.no_mes_text)
         selectableToolbar = view.findViewById(R.id.Stoolbar_messages)
         selectableToolbar?.addSystemWindowInsetToMargin(top = true)
+        tabLayout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                current_value = tab?.position!! + 1
+                Log.e("va", current_value.toString())
+                mes(current_value)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselect
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselect
+            }
+        })
         selectableToolbarLayout = view.findViewById(R.id.SAppBarLayout)
         selectableToolbar?.setOnMenuItemClickListener{menuItem ->
             when(menuItem.itemId){
@@ -273,36 +409,8 @@ class Messages : Fragment(R.layout.messages_fragment) {
             }
 
         }
-        toolbar?.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.mes1 -> {
-                    toolbar?.title = "От преподавателей"
-                    mes(0)
-                    true
-                }
-                R.id.mes2 -> {
-                    toolbar?.title = "От деканата"
-                    mes(1)
-                    true
-                }
-                R.id.mes3 -> {
-                    toolbar?.title = "От бухгалтерии"
-                    mes(2)
-                    true
-                }
-                R.id.mes4 -> {
-                    toolbar?.title = "От международной службы"
-                    mes(3)
-                    true
-                }
-                R.id.mes5 -> {
-                    toolbar?.title = "Прочее"
-                    mes(4)
-                    true
-                }
-                else -> false
-            }
-        }
+
+
     }
 
     fun View.addSystemWindowInsetToPadding(

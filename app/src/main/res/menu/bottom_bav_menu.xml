@@ -5,15 +5,10 @@
         android:title="Расписание"
         android:tooltipText="@null"
         android:icon="@drawable/bnav_timetable" />
-    <item
-        android:id="@+id/score_nav"
-        android:title="Успеваемость"
-        android:tooltipText="@null"
-        android:longClickable="false"
-        android:icon="@drawable/bnav_score" />
+
     <item
         android:id="@+id/news_nav"
-        android:title=""
+        android:title="Новости"
         android:tooltipText="@null"
         android:longClickable="false"
         android:icon="@drawable/ic_news" />

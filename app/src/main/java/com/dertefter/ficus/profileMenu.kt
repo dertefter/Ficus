@@ -1,17 +1,24 @@
 package com.dertefter.ficus
 
 import AppPreferences
+import android.animation.ObjectAnimator
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.gridlayout.widget.GridLayout
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
+import com.squareup.picasso.Picasso
+import com.yandex.mobile.ads.banner.AdSize
+import com.yandex.mobile.ads.banner.BannerAdView
+import com.yandex.mobile.ads.common.AdRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,18 +29,26 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import retrofit2.Retrofit
+import java.io.File
+import java.io.InputStream
 
 
 class profileMenu : Fragment(R.layout.profile_menu) {
     var nameText: TextView? = null
-    var wifiButton: LinearLayout? = null
-    var campusButton: LinearLayout? = null
-    var booksButton: LinearLayout? = null
-    var workButton: LinearLayout? = null
+    var wifiButton: MaterialCardView? = null
+    var downloadsButton: MaterialCardView? = null
+    var booksButton: MaterialCardView? = null
+    var workButton: MaterialCardView? = null
+    var personsButton: MaterialCardView? = null
     var profileDataButton: MaterialCardView? = null
-    var github: ImageButton? = null
-    var tg: ImageButton? = null
-
+    var diSpace: MaterialCardView? = null
+    var passButton: MaterialCardView? = null
+    var moneyButton: MaterialCardView? = null
+    var docsButton: MaterialCardView? = null
+    var tg: MaterialCardView? = null
+    var hide_tg: Button? = null
+    var scoreButton: MaterialCardView? = null
+    var ad: BannerAdView? = null
     fun editProfile() {
         val profiledataIntent = Intent(
             Auth.applicationContext(),
@@ -45,35 +60,103 @@ class profileMenu : Fragment(R.layout.profile_menu) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ad = view.findViewById(R.id.ya_banner)
+        ad?.setAdUnitId(getString(R.string.ad_profile))
+        ad?.setAdSize(AdSize.stickySize(600))
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        ad?.loadAd(adRequest)
+        hide_tg = view.findViewById(R.id.hide_tg)
+
+        scoreButton = view.findViewById(R.id.score_button)
+        scoreButton?.setOnClickListener {
+            val scoreIntent = Intent(
+                Ficus.applicationContext(),
+                ScoreActivity::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(scoreIntent)
+        }
+
+        docsButton = view.findViewById(R.id.docs_button)
+        docsButton?.setOnClickListener {
+            val docsIntent = Intent(
+                Ficus.applicationContext(),
+                Docs::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(docsIntent)
+        }
+
         profileDataButton = view.findViewById(R.id.profile_data_button)
-        campusButton = view.findViewById(R.id.campus_button)
+        passButton = view.findViewById(R.id.campus_pass_button)
+        passButton?.setOnClickListener {
+            val inta = Intent(
+                Auth.applicationContext(),
+                CampusPass::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(inta)
+        }
+
+        moneyButton = view.findViewById(R.id.money_button)
+        moneyButton?.setOnClickListener {
+            val inta = Intent(
+                Auth.applicationContext(),
+                Money::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(inta)
+        }
+
+        downloadsButton = view.findViewById(R.id.downloads_button)
+        downloadsButton?.setOnClickListener {
+            val downloadsIntent = Intent(
+                Auth.applicationContext(),
+                Downloads::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(downloadsIntent)
+        }
         booksButton = view.findViewById(R.id.books_button)
         wifiButton = view.findViewById(R.id.wifi_button)
         workButton = view.findViewById(R.id.work_button)
+        diSpace = view.findViewById(R.id.dispace_button)
+        diSpace?.setOnClickListener {
+            if (diSpace?.alpha == 1f){
+                AppPreferences.di = true
+                activity?.findViewById<LinearLayout>(R.id.di)?.visibility = View.VISIBLE
+                ObjectAnimator.ofFloat(activity?.findViewById<LinearLayout>(R.id.di), "alpha", 0f, 1f).apply {
+                    duration = 400
+                    start()
+                }
+                activity?.findViewById<LinearLayout>(R.id.lk)?.visibility = View.GONE
+            }
+
+
+        }
         workButton?.setOnClickListener {
             val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("http://om.nstu.ru/"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.nstu.ru/career_center/offers/"))
             startActivity(browserIntent)
         }
-        github = view.findViewById(R.id.gitbutton)
-        tg = view.findViewById(R.id.tg)
+        personsButton = view.findViewById(R.id.persons_button)
+        personsButton?.setOnClickListener {
+            val inta = Intent(
+                Auth.applicationContext(),
+                Persons::class.java
+            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Auth.applicationContext().startActivity(inta)
+        }
+        tg = view.findViewById(R.id.telegram_button)
         tg?.setOnClickListener {
             val browserIntent =
             Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/nstumobile_dev/"))
             startActivity(browserIntent)
         }
-        github?.setOnClickListener {
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dertefter/ficus/"))
-            startActivity(browserIntent)
+
+        if (AppPreferences.show_tg == false){
+            tg?.visibility = View.GONE
         }
-        campusButton?.setOnClickListener {
-            val campusIntent = Intent(
-                Auth.applicationContext(),
-                Campus::class.java
-            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            Auth.applicationContext().startActivity(campusIntent)
+        hide_tg?.setOnClickListener {
+            tg?.visibility = View.GONE
+            AppPreferences.show_tg = false
         }
+
         booksButton?.setOnClickListener {
             val campusIntent = Intent(
                 Auth.applicationContext(),
@@ -95,7 +178,7 @@ class profileMenu : Fragment(R.layout.profile_menu) {
             }
         })
         nameText = view.findViewById(R.id.name)
-        if (AppPreferences.name == null) {
+        if (AppPreferences.name == null){
             val client = OkHttpClient().newBuilder()
                 .addInterceptor(Interceptor { chain: Interceptor.Chain ->
                     val original: Request = chain.request()
@@ -106,7 +189,7 @@ class profileMenu : Fragment(R.layout.profile_menu) {
                 })
                 .build()
 
-            val url1 = "https://ciu.nstu.ru/student_study/student_info/progress/"
+            val url1 = "https://ciu.nstu.ru/student_study/"
             var retrofit = Retrofit.Builder()
                 .baseUrl(url1)
                 .client(client)
@@ -116,17 +199,24 @@ class profileMenu : Fragment(R.layout.profile_menu) {
                 val response = service.Study()
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        val pretty = response.body()?.string().toString()
-                        //Log.e("pretty-score", pretty)
-                        val doc: Document = Jsoup.parse(pretty)
-                        var s = doc.body().select("div.sysCaption")
-                            .select("div")[4].select("div")[9].text().toString()
-                        val sarr = s.split(" ").toTypedArray()
-                        AppPreferences.fullName = sarr[0] + " " + sarr[1] + " " + sarr[2]
-                        s = sarr[1]
+                        try{
+                            val pretty = response.body()?.string().toString()
+                            val doc: Document = Jsoup.parse(pretty)
 
-                        nameText?.text = s
-                        AppPreferences.name = s
+                            var fio = doc.body().select("span.fio").first()
+                            Log.e("fio", fio.toString())
+                            var fio_arr = fio.text().split(" ")
+                            var group = fio_arr[fio_arr.size - 1]
+                            var name = fio_arr[1]
+                            AppPreferences.group = group
+                            AppPreferences.name = name
+
+                            nameText?.text = name
+                        } catch (e: Exception){
+                            AppPreferences.name = "Профиль"
+                            AppPreferences.fullName = ""
+                        }
+
 
                     } else {
 

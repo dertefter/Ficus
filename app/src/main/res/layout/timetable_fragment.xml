@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/timetable_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
@@ -17,7 +16,6 @@
         android:layout_marginTop="80dp" />
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
@@ -30,9 +28,22 @@
             android:layout_height="?attr/actionBarSize"
             android:clipToPadding="false"
             android:fitsSystemWindows="false"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="noScroll"
             app:menu="@menu/toolbar_timetable_menu"
             app:title="Расписание занятий" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarSize="0dp"
+            tools:ignore="SpeakableTextPresentCheck">
+
+            <LinearLayout
+                android:id="@+id/weeks"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -50,166 +61,207 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp">
 
-            <FrameLayout
-                android:id="@+id/exams"
+            <LinearLayout
+                android:id="@+id/sessia_anim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible">
+                android:layout_marginTop="200dp"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/examsList"
-                    android:layout_width="match_parent"
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="180dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="center"
+                    app:lottie_autoPlay="true"
+                    app:lottie_colorFilter="?attr/colorPrimary"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/exam" />
+
+                <TextView
+                    android:id="@+id/persons_info"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"></LinearLayout>
-            </FrameLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="14dp"
+                    android:text="Вы готовы к сессии?"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <FrameLayout
-                android:id="@+id/days"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/show_sessia_button"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="visible">
+                    android:layout_gravity="center_horizontal"
+                    android:text="Показать расписание сессии"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/d1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                </FrameLayout>
-
-                <FrameLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/d2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                </FrameLayout>
-
-                <FrameLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/d3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/d4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/d5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible">
-
-                    <LinearLayout
-                        android:id="@+id/d6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                </FrameLayout>
-
-
-            </FrameLayout>
-        </FrameLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/daySelection"
-            style="@style/Widget.Material3.CardView.Filled"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
-            android:layout_marginBottom="10dp"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:cardCornerRadius="25dp">
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                app:layout_anchorGravity="bottom">
+                android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/arrowLeft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:minWidth="48dp"
-                    app:srcCompat="@drawable/ic_baseline_keyboard_arrow_left_24"
-                    app:tint="?attr/colorOnPrimary"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/daySelection"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="invisible"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
 
-                <TextView
-                    android:id="@+id/day_state"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:foregroundGravity="center"
-                    android:gravity="center"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="20sp"
-                    android:translationX="0dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal"
+                        app:layout_anchorGravity="bottom">
 
-                <ImageButton
-                    android:id="@+id/arrowRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:minWidth="48dp"
-                    app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
-                    app:tint="?attr/colorOnPrimary"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                        <ImageButton
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:id="@+id/arrowLeft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:minWidth="48dp"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_left_24"
+                            app:tint="?attr/colorOnSecondaryContainer"
+                            tools:ignore="SpeakableTextPresentCheck" />
+
+                        <TextView
+                            android:id="@+id/day_state"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="10"
+                            android:foregroundGravity="center"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="20sp"
+                            android:translationX="0dp" />
+
+                        <ImageButton
+                            android:id="@+id/arrowRight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:minWidth="48dp"
+                            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
+                            app:tint="?attr/colorOnSecondaryContainer"
+                            tools:ignore="SpeakableTextPresentCheck" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <FrameLayout
+                    android:id="@+id/days"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"></LinearLayout>
+                    </FrameLayout>
+
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/exams"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"></LinearLayout>
+                </FrameLayout>
+
+                <com.yandex.mobile.ads.banner.BannerAdView
+                    android:id="@+id/ya_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone" />
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
-
-    </RelativeLayout>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

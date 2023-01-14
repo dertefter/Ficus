@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/timetable_nav"
+        android:title="Расписание"
+        android:tooltipText="@null"
+        android:icon="@drawable/bnav_timetable" />
+    <item
+        android:id="@+id/news_nav"
+        android:title="Новости"
+        android:tooltipText="@null"
+        android:longClickable="false"
+        android:icon="@drawable/bnav_news_guest" />
+    <item
+        android:id="@+id/profile_nav"
+        android:tooltipText="@null"
+        android:icon="@drawable/bnav_profile"
+        android:title="Профиль" />
+</menu>

@@ -16,60 +16,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical">
 
-                <com.google.android.material.card.MaterialCardView
-                    style="?attr/materialCardViewElevatedStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="?attr/colorTertiary"
-                    app:cardCornerRadius="32dp"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="5dp"
-                    app:contentPaddingLeft="10dp"
-                    app:contentPaddingRight="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/fullname"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="10dp"
-                            android:paddingRight="10dp"
-                            android:textColor="?attr/colorOnTertiary"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/fullgroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="3dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="6dp"
-                            android:paddingRight="10dp"
-                            android:paddingBottom="10dp"
-                            android:textColor="?attr/colorOnTertiary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:text="Личные данные"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="20sp" />
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -124,6 +81,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
+                        android:maxLength="18"
+                        android:numeric="integer"
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -147,15 +106,14 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
-                    android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginRight="20dp"
                     android:text="Ссылки на профили в соцсетях"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="20sp" />
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="16sp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -169,43 +127,6 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/pVK"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Facebook"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="10dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pFacebook"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="Instagram"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="10dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/pInsta"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="" />

@@ -3,7 +3,9 @@ package com.dertefter.ficus
 import AppPreferences
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.DiscretePathEffect
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -17,7 +19,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.*
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
-import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,9 +29,13 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
+import androidx.appcompat.widget.Toolbar
+import com.yandex.mobile.ads.banner.AdSize
+import com.yandex.mobile.ads.banner.BannerAdView
+import com.yandex.mobile.ads.common.AdRequest
 
 class Score : Fragment(R.layout.fragment_score) {
-    var toolbar: Toolbar? = null
     var scoreView: FrameLayout? = null
     var semSelection: CardView? = null
     var count: Int = 0
@@ -40,7 +45,7 @@ class Score : Fragment(R.layout.fragment_score) {
     var arrowRight: ImageButton? = null
     var semTextView: TextView? = null
     var scrollView: NestedScrollView? = null
-
+    var spinner: ProgressBar? = null
     @ColorInt
     fun Context.getColorFromAttr(
         @AttrRes attrColor: Int,
@@ -52,8 +57,13 @@ class Score : Fragment(R.layout.fragment_score) {
     }
 
     fun score() {
+
+        spinner?.visibility = View.VISIBLE
         val mInflater = LayoutInflater.from(activity)
         val client = OkHttpClient().newBuilder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(Interceptor { chain: Interceptor.Chain ->
                 val original: Request = chain.request()
                 val authorized: Request = original.newBuilder()
@@ -62,7 +72,6 @@ class Score : Fragment(R.layout.fragment_score) {
                 chain.proceed(authorized)
             })
             .build()
-
         val url1 = "https://ciu.nstu.ru/student_study/student_info/progress/"
         var retrofit = Retrofit.Builder()
             .baseUrl(url1)
@@ -71,19 +80,24 @@ class Score : Fragment(R.layout.fragment_score) {
         val service = retrofit.create(APIService::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val response = service.Study()
-            withContext(Dispatchers.Main) {
+            try{
+                val response = service.Study()
+
                 if (response.isSuccessful) {
+                    withContext(Dispatchers.Main){
+                        spinner?.visibility = View.GONE
+                    }
+
                     val pretty = response.body()?.string().toString()
                     val doc: Document = Jsoup.parse(pretty)
-                    val s = doc.body().select("div.sysContentWithMenu")
+                    val s = doc.body().select("main.page-content")
                     var tables = s.select("table.tdall")
                     count = 0
                     var size = tables.size
                     for (i in 1..size - 1) {
                         count++
                         max_count++
-                        var semestr = LinearLayout(Work.applicationContext())
+                        var semestr = LinearLayout(Ficus.applicationContext())
                         semestr.orientation = LinearLayout.VERTICAL
                         semestr.visibility = View.INVISIBLE
                         val trs = tables[i].select("tr.last_progress")
@@ -124,8 +138,22 @@ class Score : Fragment(R.layout.fragment_score) {
                                 item.findViewById<ImageView>(R.id.cardPrimary2).setImageResource(R.drawable.error)
                             }
                             semestr.addView(item)
+                            withContext(Dispatchers.Main){
+                                ObjectAnimator.ofFloat(item, "alpha", 0f, 1f).apply {
+                                    duration = 300
+                                    start()
+                                }
+                            }
+
                         }
-                        scoreView?.addView(semestr)
+                        withContext(Dispatchers.Main) {
+                            scoreView?.addView(semestr)
+                            semSelection?.visibility = View.VISIBLE
+                            ObjectAnimator.ofFloat(semSelection, "alpha", 0f, 1f).apply {
+                                duration = 300
+                                start()
+                            }
+                        }
                     }
                     for (i in 0..count - 1) {
                         if (i == count - 1) {
@@ -152,7 +180,13 @@ class Score : Fragment(R.layout.fragment_score) {
                     Log.e("RETROFIT_ERROR", response.code().toString())
 
                 }
+
+            }catch (e: Exception){
+                Log.e("ficus.score", e.stackTraceToString())
+            }catch (e: Throwable){
+                Log.e("ficus.score", e.stackTraceToString())
             }
+
         }
     }
 
@@ -160,6 +194,14 @@ class Score : Fragment(R.layout.fragment_score) {
         val a = ObjectAnimator.ofFloat(semTextView, "translationX", -300f, 0f)
         a.duration = 140
         a.start()
+        ObjectAnimator.ofFloat(scoreView, "alpha", 0f, 1f).apply {
+            duration = 140
+            start()
+        }
+        ObjectAnimator.ofFloat(scoreView, "translationX", -300f, 0f).apply {
+            duration = 120
+            start()
+        }
         if (count > 1) {
             count--
         }
@@ -187,6 +229,14 @@ class Score : Fragment(R.layout.fragment_score) {
         val a = ObjectAnimator.ofFloat(semTextView, "translationX", 300f, 0f)
         a.duration = 140
         a.start()
+        ObjectAnimator.ofFloat(scoreView, "alpha", 0f, 1f).apply {
+            duration = 140
+            start()
+        }
+        ObjectAnimator.ofFloat(scoreView, "translationX", 300f, 0f).apply {
+            duration = 120
+            start()
+        }
         if (count < max_count) {
             count++
         }
@@ -210,20 +260,21 @@ class Score : Fragment(R.layout.fragment_score) {
         semTextView?.text = (count).toString() + " семестр"
     }
 
+
+
+    var ad: BannerAdView? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ad = view.findViewById(R.id.ya_banner)
+        ad?.setAdUnitId(getString(R.string.ad_score))
+        ad?.setAdSize(AdSize.stickySize(400))
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        ad?.loadAd(adRequest)
         scoreView = view.findViewById(R.id.score_view)
-        view.findViewById<Toolbar>(R.id.toolbar_score).addSystemWindowInsetToMargin(top = true)
         semSelection = view.findViewById(R.id.scoreSelection)
+        spinner = view.findViewById(R.id.spinner)
         semTextView = view.findViewById(R.id.score_state)
         scrollView = view.findViewById(R.id.nestedScrollView)
-        scrollView?.setOnScrollChangeListener { view, i, i2, i3, i4 ->
-            if (i2 > i4) {
-                ObjectAnimator.ofFloat(semSelection, "translationY", 1000f).start()
-            } else {
-                ObjectAnimator.ofFloat(semSelection, "translationY", 0f).start()
-            }
-        }
         arrowLeft = view.findViewById(R.id.arrowLeft)
         arrowRight = view.findViewById(R.id.arrowRight)
         arrowLeft?.setOnClickListener {

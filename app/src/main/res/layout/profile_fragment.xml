@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profile_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
@@ -21,9 +20,9 @@
             android:layout_height="?attr/actionBarSize"
             android:clipToPadding="false"
             android:fitsSystemWindows="false"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="noScroll"
             app:menu="@menu/profile_menu"
-            app:title="Профиль" />
+            app:title="Личный кабинет" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,7 +35,7 @@
         <FrameLayout
             android:id="@+id/profile_mwnu"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

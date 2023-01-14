@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Work"
@@ -20,12 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:orientation="vertical"
             android:padding="20dp"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:cardCornerRadius="24dp">
+            app:cardBackgroundColor="?attr/colorPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:text="Имя"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -51,212 +52,535 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:text="личные данные"
+                    android:text="Контактная информация"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="16sp" />
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/telegram_button"
+            style="@style/Widget.Material3.CardView.Filled"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="13dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:minHeight="48dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:cardBackgroundColor="?attr/colorTertiaryContainer">
 
             <LinearLayout
-                android:id="@+id/books_button"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:paddingTop="5dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="5dp"
-                tools:ignore="TouchTargetSizeCheck">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/local_library48px"
-                    app:tint="?attr/colorOnBackground" />
-
-                <Space
-                    android:layout_width="26dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:layout_width="324dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Библиотека"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/work_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:paddingTop="5dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="5dp"
-                tools:ignore="TouchTargetSizeCheck">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/business_center"
-                    app:tint="?attr/colorOnBackground" />
-
-                <Space
-                    android:layout_width="26dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:layout_width="324dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Трудоустройство"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/campus_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:paddingTop="5dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="5dp"
-                tools:ignore="TouchTargetSizeCheck">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/campus"
-                    app:tint="?attr/colorOnBackground" />
-
-                <Space
-                    android:layout_width="26dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:layout_width="324dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Карта кампуса"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/wifi_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:paddingTop="5dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="5dp"
-                tools:ignore="TouchTargetSizeCheck">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/wifi_tethering"
-                    app:tint="?attr/colorOnBackground" />
-
-                <Space
-                    android:layout_width="26dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:layout_width="324dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Wi-Fi НГТУ"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="Следите за новостями!"
-                    android:textSize="16sp" />
+                    android:layout_gravity="top"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="0"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/ic_telegram_svgrepo_com"
+                    app:tint="?attr/colorOnTertiaryContainer" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_weight="0"
+                    android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/gitbutton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleX="0.9"
-                        android:scaleY="0.9"
-                        app:srcCompat="@drawable/ic_github"
-                        app:tint="?attr/colorOnBackground"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="0"
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="Подпишитесь на Telegram, чтобы быть в курсе новостей и обновлений!"
+                        android:textColor="?attr/colorOnTertiaryContainer"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-                    <ImageButton
-                        android:id="@+id/tg"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleX="0.81"
-                        android:scaleY="0.81"
-                        app:srcCompat="@drawable/ic_telegram_svgrepo_com"
-                        app:tint="?attr/colorOnBackground"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                    <Button
+                        android:id="@+id/hide_tg"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="0"
+                        android:text="Не показыать больше"
+                        android:textColor="?attr/colorOnTertiaryContainer" />
                 </LinearLayout>
 
             </LinearLayout>
 
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/score_button"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="13dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:minHeight="48dp"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0"
+                    android:padding="10dp"
+                    app:srcCompat="@drawable/school"
+                    app:tint="?attr/colorOnSecondaryContainer" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:padding="3dp"
+                    android:text="Результаты сессии"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:columnCount="3">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dispace_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="false"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/di_background" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal|top"
+                            android:text="DiSpace"
+                            android:textColor="#ffffff"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/persons_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/group"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Расписание преподавателей"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/wifi_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/wifi"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Wi-Fi НГТУ"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/docs_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/description"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Заявки на документы"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/Widget.Material3.CardView.Filled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="6dp"
+                        app:cardBackgroundColor="?attr/colorTertiary"
+                        app:cardCornerRadius="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:padding="3dp"
+                            android:text="Бета"
+                            android:textColor="?attr/colorOnTertiary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/books_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/local_library"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Библиотека"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/work_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/business_center"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Вакансии"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/downloads_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/file_download"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Загрузки"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/campus_pass_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/credit_card"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Бюро пропусков"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/money_button"
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="110dp"
+                    android:layout_height="94dp"
+                    android:layout_margin="8dp"
+                    android:clickable="true"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="0"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@drawable/currency_ruble"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal|top"
+                            android:text="Стипедии и выплаты"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </androidx.gridlayout.widget.GridLayout>
+
         </LinearLayout>
 
+        <com.yandex.mobile.ads.banner.BannerAdView
+            android:id="@+id/ya_banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="12dp"
+            android:visibility="visible" />
 
     </LinearLayout>
+
+
 </ScrollView>

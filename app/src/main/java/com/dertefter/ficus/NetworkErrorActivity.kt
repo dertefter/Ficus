@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.color.DynamicColors
 
 class NetworkErrorActivity : AppCompatActivity() {
     var retry_button: Button? = null
@@ -20,13 +21,16 @@ class NetworkErrorActivity : AppCompatActivity() {
         AppPreferences.fullName = null
         AppPreferences.login = null
         AppPreferences.password = null
-        val inta = Intent(Work.applicationContext(), Login::class.java)
+        val inta = Intent(Ficus.applicationContext(), Login::class.java)
         startActivity(inta)
         finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (AppPreferences.monet == true){
+            DynamicColors.applyToActivityIfAvailable(this)
+        }
         setContentView(R.layout.network_error_activity)
         log_out = findViewById(R.id.logout_auth)
         if (AppPreferences.name == null) {

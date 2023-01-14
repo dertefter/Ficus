@@ -1,20 +1,24 @@
 package com.dertefter.ficus
 
 
+import AppPreferences
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
@@ -31,18 +35,40 @@ import java.io.IOException
 
 class Login : AppCompatActivity() {
     var loading: ProgressBar? = null
+    var guestButton: TextView? = null
     var loginTextView: TextView? = null
     var passwordTextView: TextView? = null
     var signInButton: Button? = null
     private var loginText: String = ""
     private var passwordText: String = ""
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (AppPreferences.guest == true){
+            val inta = Intent(Ficus.applicationContext(), Guest::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(inta)
+        }else{
+            finish()
+        }
     }
 
 
     var tokenId: String = ""
     var gr = ""
+
+    fun guestLogin() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Вы уверены?")
+            .setMessage("В гостевом режиме вам будут не доступны возможности личного кабинета, такие как просмотр зачётки и чтение почты")
+            .setNegativeButton("Авторизация") { dialog, which ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Продолжить") { dialog, which ->
+                AppPreferences.guest = true
+                val inta =
+                    Intent(this, Guest::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(inta)
+            }
+            .show()
+    }
 
     fun getGroup() {
         var htmlString: String = ""
@@ -70,20 +96,17 @@ class Login : AppCompatActivity() {
                     val pretty = response.body()?.string().toString()
                     val doc: Document = Jsoup.parse(pretty)
 
-                    var bodyyy = doc.body().select("div").first()
-                    var el = bodyyy.select("div").first()
-                    el = el.select("div.other_lks")[1]
-                    el = el.child(0)
-                    var txt: String = el.toString()
-                    var group = ""
-                    for (i in 32..txt.length) {
-                        if (txt[i] == ' ' || txt[i] == '<')
-                            break
-                        group += txt[i]
-                    }
-
+                    var fio = doc.body().select("span.fio").first()
+                    Log.e("fio", fio.toString())
+                    var fio_arr = fio.text().split(" ")
+                    var group = fio_arr[fio_arr.size - 1]
+                    var name = fio_arr[1]
                     AppPreferences.group = group
+                    AppPreferences.name = name
+                    AppPreferences.fullName = fio_arr[0] + " " + fio_arr[1] + " " + fio_arr[2].replace(",", "")
+                    AppPreferences.guest = false
                     ViewStudy()
+
 
 
                 } else {
@@ -92,10 +115,6 @@ class Login : AppCompatActivity() {
             }
         }
 
-    }
-
-    fun getToken(): String {
-        return tokenId
     }
 
     fun ViewStudy() {
@@ -198,7 +217,7 @@ class Login : AppCompatActivity() {
 
                                                 CoroutineScope(Dispatchers.IO).launch {
                                                     // Do the POST request and get response
-                                                    val response4 = service.authPart4(requestBody4)
+                                                    val response4 = service.authPart4("validateGoto" ,requestBody4)
 
                                                     withContext(Dispatchers.Main) {
 
@@ -217,7 +236,7 @@ class Login : AppCompatActivity() {
                                                             var inta = Intent(
                                                                 context,
                                                                 Login::class.java
-                                                            ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                                             context.startActivity(inta)
 
                                                         }
@@ -248,7 +267,7 @@ class Login : AppCompatActivity() {
 
                 }
             } catch (e: Throwable) {
-                Log.e("a", "1")
+                Log.e("a", e.toString())
                 val context: Context = Auth.applicationContext()
                 var inta = Intent(
                     context,
@@ -269,6 +288,10 @@ class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        guestButton = findViewById(R.id.guestButton)
+        guestButton?.setOnClickListener {
+            guestLogin()
+        }
         loading = findViewById(R.id.progressBarLogin)
         loginTextView = findViewById(R.id.login)
         passwordTextView = findViewById(R.id.password)

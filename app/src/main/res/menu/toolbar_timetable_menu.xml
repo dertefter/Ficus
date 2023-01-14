@@ -6,4 +6,7 @@
     <item
         android:id="@+id/l2"
         android:title="Расписание сессии"/>
+    <item
+        android:id="@+id/l3"
+        android:title="Расписание преподавателей"/>
 </menu>

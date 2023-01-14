@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/read_message_layout"
@@ -7,42 +7,55 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_read_message"
+    <ProgressBar
+        android:id="@+id/spinner_read_mes"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="80dp" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/read_message_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:clipToPadding="false"
         android:fitsSystemWindows="false"
-        android:minHeight="?attr/actionBarSize"
-        android:paddingBottom="10dp"
-        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/arrow_back"
-        app:navigationIconTint="?attr/colorOnPrimary"
-        app:subtitleCentered="true"
-        app:subtitleTextColor="?attr/colorOnPrimary"
-        app:titleCentered="true"
-        app:titleTextColor="?attr/colorOnPrimary">
+        app:liftOnScroll="true">
 
-    </com.google.android.material.appbar.MaterialToolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_read_message"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:fitsSystemWindows="false"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:navigationIcon="@drawable/arrow_back" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/read_mes_scroll_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_read_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_score"
         tools:ignore="SpeakableTextPresentCheck">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/read_message_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/read_message_text"
@@ -54,14 +67,15 @@
                 android:gravity="left"
                 android:lineSpacingExtra="8sp"
                 android:linksClickable="true"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delete_this"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
         android:layout_margin="24dp"
         android:clickable="true"
         android:focusable="true"
@@ -70,4 +84,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/delete"
         tools:ignore="SpeakableTextPresentCheck" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -10,7 +10,16 @@ import androidx.fragment.app.Fragment
 
 class Profile : Fragment(R.layout.profile_fragment) {
     var toolbar: Toolbar? = null
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (AppPreferences.guest == true) {
 
+            fragmentManager?.beginTransaction()?.replace(R.id.profile_mwnu, profileMenuGuest())?.commit()
+            toolbar?.menu?.clear()
+        } else{
+            fragmentManager?.beginTransaction()?.replace(R.id.profile_mwnu, profileMenu())?.commit()
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar = view.findViewById(R.id.toolbar_pr)
@@ -18,14 +27,23 @@ class Profile : Fragment(R.layout.profile_fragment) {
         toolbar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.settings_button -> {
-                    var inta = Intent(Work.applicationContext(), Settings::class.java)
+                    var inta = Intent(Auth.applicationContext(), Settings::class.java)
                     startActivity(inta)
                     true
                 }
                 else -> false
             }
         }
-        fragmentManager?.beginTransaction()?.replace(R.id.profile_mwnu, profileMenu())?.commit()
+        if (AppPreferences.guest == true) {
+
+            fragmentManager?.beginTransaction()?.replace(R.id.profile_mwnu, profileMenuGuest())?.commit()
+            toolbar?.menu?.clear()
+        } else{
+            fragmentManager?.beginTransaction()?.replace(R.id.profile_mwnu, profileMenu())?.commit()
+        }
+
+
+
     }
 
     fun View.addSystemWindowInsetToMargin(

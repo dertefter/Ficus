@@ -2,57 +2,133 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/CardItem"
-    style="?attr/materialCardViewElevatedStyle"
+    style="?attr/materialCardViewFilledStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="25dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-
-            android:id="@+id/time"
-            android:layout_width="105dp"
-            android:layout_height="match_parent"
-            android:background="?attr/colorSurfaceVariant"
-            android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="16sp" />
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="6dp">
+            android:background="?attr/colorSecondary"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
             <TextView
 
-                android:id="@+id/lesson"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="8dp"
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:text="11.00-22.00"
+                android:textColor="?attr/colorOnSecondary"
                 android:textSize="16sp" />
 
             <TextView
 
-                android:id="@+id/aud"
-                android:layout_width="wrap_content"
+                android:id="@+id/type"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:textAllCaps="false"
-                android:textSize="14sp" />
+                android:layout_gravity="start"
+                android:layout_marginRight="6dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Лекция"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="16sp" />
+
         </LinearLayout>
+
+        <TextView
+
+            android:id="@+id/lesson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="5dp"
+            android:text="Название пары"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                app:srcCompat="@drawable/campus"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/aud"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:text="4-510"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                app:srcCompat="@drawable/group"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:text="Иванов И.И."
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

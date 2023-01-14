@@ -10,9 +10,10 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.lottie.LottieAnimationView
+import com.google.android.material.color.DynamicColors
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -48,9 +49,9 @@ class Auth : AppCompatActivity() {
 
     private fun View.blink(
         times: Int = Animation.INFINITE,
-        duration: Long = 600L,
-        offset: Long = 20L,
-        minAlpha: Float = 0.0f,
+        duration: Long = 400L,
+        offset: Long = 5L,
+        minAlpha: Float = 0.6f,
         maxAlpha: Float = 1.0f,
         repeatMode: Int = Animation.REVERSE
     ) {
@@ -82,92 +83,10 @@ class Auth : AppCompatActivity() {
     var gr = ""
 
     fun getGroup() {
-        var htmlString: String = ""
-        val client = OkHttpClient().newBuilder()
-            .addInterceptor(Interceptor { chain: Interceptor.Chain ->
-                val original: Request = chain.request()
-                val authorized: Request = original.newBuilder()
-                    .addHeader("Cookie", "NstuSsoToken=$tokenId")
-                    .build()
-                chain.proceed(authorized)
-            })
-            .build()
-
-        val url1 = "https://ciu.nstu.ru/student_study/"
-        var retrofit = Retrofit.Builder()
-            .baseUrl(url1)
-            .client(client)
-            .build()
-        val service = retrofit.create(APIService::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.Study()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-
-                    val pretty = response.body()?.string().toString()
-                    val doc: Document = Jsoup.parse(pretty)
-
-                    var bodyyy = doc.body().select("div").first()
-                    var el = bodyyy.select("div").first()
-                    el = el.select("div.other_lks")[1]
-                    el = el.child(0)
-                    var txt: String = el.toString()
-                    var group = ""
-                    for (i in 32..txt.length) {
-                        if (txt[i] == ' ' || txt[i] == '<')
-                            break
-                        group += txt[i]
-                    }
-
-                    AppPreferences.group = group
-                    ViewStudy()
-
-
-                } else {
-                    Log.e("RETROFIT_ERROR", response.code().toString())
-                }
-            }
-        }
-
-    }
-
-    fun getToken(): String {
-        return tokenId
-    }
-
-    fun ViewStudy() {
-        val client = OkHttpClient().newBuilder()
-            .addInterceptor(Interceptor { chain: Interceptor.Chain ->
-                val original: Request = chain.request()
-                val authorized: Request = original.newBuilder()
-                    .addHeader("Cookie", "NstuSsoToken=$tokenId")
-                    .build()
-                chain.proceed(authorized)
-            })
-            .build()
-
-        val url1 = "https://ciu.nstu.ru/student_study/"
-        var retrofit = Retrofit.Builder()
-            .baseUrl(url1)
-            .client(client)
-            .build()
-        val service = retrofit.create(APIService::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = service.Study()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    val pretty = response.body()?.string().toString()
-                    val context: Context = applicationContext()
-                    val inta =
-                        Intent(context, Work::class.java)
-                    startActivity(inta)
-                } else {
-
-                    Log.e("RETROFIT_ERROR", response.code().toString())
-
-                }
-            }
-        }
+        val context: Context = applicationContext()
+        val inta =
+            Intent(context, Work::class.java)
+        startActivity(inta)
     }
 
 
@@ -207,97 +126,22 @@ class Auth : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 if (response.isSuccessful) {
 
-                                    // Convert raw JSON to pretty JSON using GSON library
-                                    val gson = GsonBuilder().setPrettyPrinting().create()
-                                    val prettyJson = gson.toJson(
-                                        JsonParser.parseString(
-                                            response.body()
-                                                ?.string() // About this thread blocking annotation : https://github.com/square/retrofit/issues/3255
-                                        )
-                                    )
-                                    retrofit.newBuilder()
-                                        .baseUrl("https://login.nstu.ru/ssoservice/json/users/$login/")
-                                        .build()
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        /*
-                                         * For @Query: You need to replace the following line with val response = service.getEmployees(2)
-                                         * For @Path: You need to replace the following line with val response = service.getEmployee(53)
-                                         */
-
-                                        // Do the GET request and get response
-                                        val response = service.authPart3()
-
-                                        withContext(Dispatchers.Main) {
-                                            if (response.isSuccessful) {
-                                                val animLottie = ObjectAnimator.ofFloat(findViewById<LottieAnimationView>(
-                                                    R.id.lottieAnimationView
-                                                ), "alpha", 1f, 0f)
-                                                animLottie .duration = 100
-                                                animLottie .start()
-                                                val anim1 = ObjectAnimator.ofFloat(icon, "alpha", 0f, 1f)
-                                                anim1.duration = 460
-                                                anim1.start()
-                                                val anim2 = ObjectAnimator.ofFloat(icon, "scaleX", 0f, 1f)
-                                                anim2.duration = 300
-                                                anim2.start()
-                                                val anim3 = ObjectAnimator.ofFloat(icon, "scaleY", 0f, 1f)
-                                                anim3.duration = 100
-                                                anim3.start()
-
-                                                retrofit.newBuilder().baseUrl(url1).build()
-                                                val requestBody4 =
-                                                    CookieString.toRequestBody("application/json".toMediaTypeOrNull())
-
-                                                CoroutineScope(Dispatchers.IO).launch {
-                                                    // Do the POST request and get response
-                                                    val response4 = service.authPart4(requestBody4)
-
-                                                    withContext(Dispatchers.Main) {
-                                                        val r = rand(1, 9)
-                                                        when (r){
-                                                            1 -> text1?.text = "Загружаем данные..."
-                                                            2 -> text1?.text = "Подготовка..."
-                                                            3 -> text1?.text = "Подготовка..."
-                                                            4 -> text1?.text = "Загружаем..."
-                                                            5 -> text1?.text = "Загружаем..."
-                                                            6 -> text1?.text = "Почти готово..."
-                                                            7 -> text1?.text = "Почти готово..."
-                                                            8 -> text1?.text = "Подготовка..."
-                                                            9 -> text1?.text = "Почти готово..."
-                                                        }
-                                                        if (response.isSuccessful) {
-                                                            var r = response.body()?.string()
-                                                                ?.toString()
-                                                            if (r != null) {
-                                                                AppPreferences.login = login
-                                                                AppPreferences.password = password
-                                                                getGroup()
-                                                            }
-
-                                                        } else {
-                                                            val context: Context =
-                                                                applicationContext()
-                                                            var inta = Intent(
-                                                                context,
-                                                                Login::class.java
-                                                            ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                            context.startActivity(inta)
-
-                                                        }
-                                                    }
-                                                }
-
-
-                                            } else {
-
-                                                Log.e("RETROFIT_ERROR", response.code().toString())
-
-                                            }
-                                        }
+                                    var r = response.body()?.string()
+                                        ?.toString()
+                                    if (r != null) {
+                                        AppPreferences.login = login
+                                        AppPreferences.password = password
+                                        getGroup()
                                     }
-                                } else {
 
-                                    Log.e("RETROFIT_ERROR_PART2", response.code().toString())
+                                } else {
+                                    val context: Context =
+                                        applicationContext()
+                                    var inta = Intent(
+                                        context,
+                                        Login::class.java
+                                    ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(inta)
 
                                 }
                             }
@@ -321,8 +165,20 @@ class Auth : AppCompatActivity() {
 
             } catch (e: HttpException) {
                 Log.e("a", "2")
+                val context: Context = Auth.applicationContext()
+                var inta = Intent(
+                    context,
+                    NetworkErrorActivity::class.java
+                ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(inta)
             } catch (e: IOException) {
                 Log.e("a", "3")
+                val context: Context = Auth.applicationContext()
+                var inta = Intent(
+                    context,
+                    NetworkErrorActivity::class.java
+                ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(inta)
             }
         }
 
@@ -330,16 +186,32 @@ class Auth : AppCompatActivity() {
     }
 
     var icon: ImageView? = null
+    var icon2: ImageView? = null
     var text1: TextView? = null
+    var animationLayout: LinearLayout? = null
+
     private  fun rand(start: Int, end: Int): Int {
         require(start <= end) { "Illegal Argument" }
         return (Math.random() * (end - start + 1)).toInt() + start
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (AppPreferences.monet == true){
+            DynamicColors.applyToActivityIfAvailable(this)
+        }
         setContentView(R.layout.activity_auth)
+        animationLayout = findViewById(R.id.auth_text_layout)
         text1 = findViewById(R.id.auth_text1)
         icon = findViewById(R.id.authIcon)
+        icon2 = findViewById(R.id.authIcon2)
+        if (AppPreferences.nstu_icon == true){
+            icon?.visibility = View.GONE
+            icon2?.visibility = View.VISIBLE
+        }
+        AppPreferences.di = false
+        ObjectAnimator.ofFloat(icon, "alpha", 0f, 1f).setDuration(300).start()
+        ObjectAnimator.ofFloat(icon, "scaleX", 0f, 1f).setDuration(200).start()
+        ObjectAnimator.ofFloat(icon, "scaleY", 0f, 1f).setDuration(200).start()
         val r = rand(1, 9)
         when (r){
             1 -> text1?.text = "Подключаемся к НГТУ"
@@ -347,12 +219,12 @@ class Auth : AppCompatActivity() {
             3 -> text1?.text = "Подключаемся к НГТУ"
             4 -> text1?.text = "Подключаемся к НГТУ"
             5 -> text1?.text = "Подключаемся к сети"
-            6 -> text1?.text = "Подключаемся к НГТУ"
+            6 -> text1?.text = "Подключаемся к НГТУ НЭТИ"
             7 -> text1?.text = "Подключаемся к сети"
             8 -> text1?.text = "Подключаемся к сети"
-            9 -> text1?.text = "Подключаемся к сети"
+            9 -> text1?.text = "Подключаемся к НГТУ НЭТИ"
         }
-        auth_text1?.blink()
+        animationLayout?.blink()
         AppPreferences.setup(Auth.applicationContext())
 
         var intent_login = Intent(this, Login::class.java)
@@ -361,7 +233,16 @@ class Auth : AppCompatActivity() {
         if (saved_login != "" && saved_password != "" && saved_login != null && saved_password != null) {
             authFun(saved_login, saved_password)
         } else {
-            startActivity(intent_login)
+            if (AppPreferences.guest == true){
+                val context: Context = Auth.applicationContext()
+                val inta =
+                    Intent(context, Guest::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(inta)
+            }
+            else{
+                startActivity(intent_login)
+            }
+
         }
 
     }
