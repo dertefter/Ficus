@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="false"
+    tools:context=".Work">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="false">
+
+            <com.events.calendar.views.EventsCalendar
+                android:id="@+id/eventsCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@android:color/transparent"
+                android:overScrollMode="never"
+                app:datesTextSize="0sp"
+                app:eventDotColor="?attr/colorPrimary"
+                app:isBoldTextOnSelectionEnabled="false"
+                app:monthTitleColor="?attr/colorOnBackground"
+                app:monthTitleTextSize="20sp"
+                app:primaryTextColor="?attr/colorOnBackground"
+                app:rangeSelectionColor="?attr/colorSecondaryContainer"
+                app:rangeSelectionEndColor="?attr/colorOnBackground"
+                app:rangeSelectionStartColor="?attr/colorOnBackground"
+                app:secondaryTextColor="?attr/colorOnBackground"
+                app:selectedTextColor="?attr/colorOnPrimaryContainer"
+                app:selectionColor="?attr/colorPrimaryContainer"
+                app:weekHeaderColor="?attr/colorOnBackground"
+                app:weekHeaderTextSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="События"
+            android:textSize="20sp"
+            android:textStyle="normal|bold"
+            android:visibility="visible" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/events_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_actions"
+            tools:ignore="SpeakableTextPresentCheck">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/no_events"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:text="Ничего не запланировано"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/events_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

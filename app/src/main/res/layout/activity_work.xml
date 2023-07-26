@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context=".Work">
+
+    <LinearLayout
+        android:id="@+id/lk"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:scaleX="1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.navigationrail.NavigationRailView
+                android:id="@+id/rail"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:menu="@menu/bottom_bav_menu" />
+
+            <FrameLayout
+                android:id="@+id/fllkFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="false"></FrameLayout>
+        </LinearLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:longClickable="false"
+            android:visibility="visible"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_bav_menu">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/di"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.google.android.material.navigationrail.NavigationRailView
+                android:id="@+id/di_rail"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:menu="@menu/bottom_nav_di_menu">
+
+            </com.google.android.material.navigationrail.NavigationRailView>
+
+            <FrameLayout
+                android:id="@+id/DiflFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fitsSystemWindows="false">
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/DibottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0"
+            android:longClickable="false"
+            android:visibility="visible"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav_di_menu">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Work">
+
+    <ProgressBar
+        android:id="@+id/spinner_persons"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:visibility="gone" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/searchAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBarBack"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:visibility="gone"
+            app:navigationIcon="@drawable/arrow_back"
+            app:title="Назад" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/toolbarPersons"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="40dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/findPersonField"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="Поиск..."
+                    android:importantForAutofill="no"
+                    android:minHeight="48dp"
+                    android:paddingLeft="20dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/findPersonButton"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="0"
+                    android:enabled="false"
+                    android:text="Найти"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Note: A RecyclerView can also be used -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/searchScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <!-- Scrollable content -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/persons_anim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="200dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="130dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    app:lottie_autoPlay="true"
+                    app:lottie_colorFilter="?attr/colorPrimary"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/timetable2" />
+
+                <TextView
+                    android:id="@+id/persons_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="14dp"
+                    android:text="Введите ФИО преподавателя"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/persons_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/person_timetable_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <include layout="@layout/person_card" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:scrollbarSize="0dp"
+                    tools:ignore="SpeakableTextPresentCheck">
+
+                    <LinearLayout
+                        android:id="@+id/weeks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/empty_divider_horizontal"
+                        android:orientation="horizontal"
+                        android:showDividers="middle" />
+                </HorizontalScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/timetable_scrollview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    tools:ignore="SpeakableTextPresentCheck">
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/daySelection"
+                                style="@style/Widget.Material3.CardView.Filled"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:visibility="gone"
+                                app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentBottom="true"
+                                    android:orientation="horizontal"
+                                    app:layout_anchorGravity="bottom">
+
+                                    <ImageButton
+                                        android:id="@+id/arrowLeft"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:background="@null"
+                                        android:minWidth="48dp"
+                                        app:srcCompat="@drawable/ic_baseline_keyboard_arrow_left_24"
+                                        app:tint="?attr/colorOnSecondaryContainer"
+                                        tools:ignore="SpeakableTextPresentCheck" />
+
+                                    <TextView
+                                        android:id="@+id/day_state"
+                                        android:layout_width="150dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="10"
+                                        android:foregroundGravity="center"
+                                        android:gravity="center"
+                                        android:textColor="?attr/colorOnSecondaryContainer"
+                                        android:textSize="20sp"
+                                        android:translationX="0dp" />
+
+                                    <ImageButton
+                                        android:id="@+id/arrowRight"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:background="@null"
+                                        android:minWidth="48dp"
+                                        app:srcCompat="@drawable/ic_baseline_keyboard_arrow_right_24"
+                                        app:tint="?attr/colorOnSecondaryContainer"
+                                        tools:ignore="SpeakableTextPresentCheck" />
+                                </LinearLayout>
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <FrameLayout
+                                android:id="@+id/days"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="visible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+                                </FrameLayout>
+
+                                <FrameLayout
+
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="invisible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+                                </FrameLayout>
+
+                                <FrameLayout
+
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="invisible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="invisible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="invisible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="invisible">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:divider="@drawable/empty_divider_8dp"
+                                        android:orientation="vertical"
+                                        android:showDividers="middle" />
+                                </FrameLayout>
+
+
+                            </FrameLayout>
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+                </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

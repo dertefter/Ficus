@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="80"
+    android:versionName="3.9">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <application
+        android:name=".Ficus"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NSTUMobile"
+        android:usesCleartextTraffic="true">
+
+        <receiver
+            android:name=".NewAppWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
+        <service android:name=".AppWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".Auth"
+            android:exported="true"
+            android:noHistory="true" />
+
+        <activity-alias
+            android:name=".OneLauncherAlias"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Ficus"
+            android:targetActivity=".Auth">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".TwoLauncherAlias"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher2"
+            android:label="Ficus"
+            android:targetActivity=".Auth">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name=".Work"
+            android:exported="false" />
+        <activity
+            android:name=".Downloads"
+            android:exported="false" />
+        <activity
+            android:name=".CampusPass"
+            android:exported="false" />
+        <activity
+            android:name=".ErrorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Guest"
+            android:exported="false" />
+        <activity
+            android:name=".NetworkErrorActivity"
+            android:exported="false"
+            android:noHistory="true" />
+        <activity
+            android:name=".Settings"
+            android:exported="false"
+            android:noHistory="true" />
+        <activity
+            android:name=".ShareScore"
+            android:exported="false" />
+        <activity
+            android:name=".Docs"
+            android:exported="false" />
+        <activity
+            android:name=".ScoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileData"
+            android:exported="false" />
+        <activity
+            android:name=".ReadMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DiReadCourse"
+            android:exported="false" />
+        <activity
+            android:name=".DiReadMessages"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ReadNewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Persons"
+            android:exported="false" />
+        <activity
+            android:name=".Books"
+            android:exported="false" />
+        <activity
+            android:name=".Money"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="true"
+            android:noHistory="true" />
+    </application>
+
+</manifest>

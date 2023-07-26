@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/l1"
+        android:title="Расписание занятий" />
+    <item
+        android:id="@+id/l2"
+        android:title="Расписание сессии"/>
+    <item
+        android:id="@+id/l3"
+        android:title="Расписание преподавателей"/>
+</menu>

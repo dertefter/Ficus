@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="?attr/colorSurface"
+    tools:context=".Work">
+
+    <ProgressBar
+        android:id="@+id/spinner_courses"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="80dp"
+        android:visibility="invisible"
+        app:layout_anchorGravity="center" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/searchAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_courses"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:fitsSystemWindows="false"
+            app:layout_scrollFlags="noScroll"
+            app:menu="@menu/toolbar_courses_menu"
+            app:title="Поиск курсов" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/search_toolbar"
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="visible"
+            app:cardCornerRadius="40dp"
+            app:cardUseCompatPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/findCourseField"
+                    android:layout_width="fill_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6"
+                    android:background="@android:color/transparent"
+                    android:ems="10"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="Поиск..."
+                    android:minHeight="48dp"
+                    android:paddingLeft="20dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/findCourseButton"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="0"
+                    android:enabled="false"
+                    android:text="Найти"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/courses_Scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_score"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/courses_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:divider="@drawable/empty_divider_8dp"
+                android:showDividers="middle"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingRight="8dp" />
+
+            <LinearLayout
+                android:id="@+id/fav_courses_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:divider="@drawable/empty_divider_8dp"
+                android:showDividers="middle"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

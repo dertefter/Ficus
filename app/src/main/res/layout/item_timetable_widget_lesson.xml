@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/card_bg2"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="8dp"
+    android:theme="@style/Theme.NSTUMobile">
+
+    <TextView
+
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_weight="1"
+        android:background="@drawable/card_bg"
+        android:gravity="end"
+        android:paddingLeft="10dp"
+        android:paddingTop="4dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
+        android:text="Лекция"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/empty_divider"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <TextView
+
+            android:id="@+id/lesson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="Название пары"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:id="@+id/im1"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/schedule"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="11.00-22.00"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/im2"
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/campus"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/aud"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:text="4-510"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:id="@+id/im3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/group"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:maxLines="4"
+                android:text="Иванов И.И.\nИванов И.И."
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/l3"
+        app:showAsAction="always"
+        android:icon="@drawable/share"
+        android:title="Поделиться"/>
+</menu>

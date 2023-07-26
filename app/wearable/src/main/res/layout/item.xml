@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/CardItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/md_theme_dark_surfaceContainer"
+    app:cardCornerRadius="12dp"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="9dp">
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:text="Лекция"
+        android:textColor="@color/md_theme_dark_onSurface"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <TextView
+
+            android:id="@+id/lesson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="Название пары"
+            android:textColor="@color/md_theme_dark_onSurface"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:tint="@color/md_theme_dark_onSurface"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_weight="0"
+                android:src="@drawable/schedule" />
+
+            <TextView
+
+                android:id="@+id/time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
+                android:text="11.00-22.00"
+                android:textColor="@color/md_theme_dark_onSurface"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:visibility="visible">
+
+            <ImageView
+                android:tint="@color/md_theme_dark_onSurface"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_weight="0"
+                android:src="@drawable/campus" />
+
+            <TextView
+
+                android:id="@+id/aud"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:text="4-510"
+
+                android:textAllCaps="false"
+                android:textColor="@color/md_theme_dark_onSurface"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0" />
+
+            <TextView
+
+                android:id="@+id/person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="start"
+                android:maxLines="4"
+                android:text="Иванов И.И.\nИванов И.И."
+                android:textAllCaps="false"
+
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

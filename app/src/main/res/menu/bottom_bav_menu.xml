@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/timetable_nav"
+        android:title="Расписание"
+        android:tooltipText="@null"
+        android:icon="@drawable/bnav_timetable" />
+
+    <item
+        android:id="@+id/news_nav"
+        android:title="Новости"
+        android:tooltipText="@null"
+        android:longClickable="false"
+        android:icon="@drawable/ic_news" />
+    <item
+        android:id="@+id/messages_nav"
+        android:tooltipText="@null"
+        android:title="Сообщения"
+        android:icon="@drawable/bnav_messages" />
+    <item
+        android:id="@+id/profile_nav"
+        android:tooltipText="@null"
+        android:title="Профиль"
+        android:icon="@drawable/bnav_profile" />
+</menu>

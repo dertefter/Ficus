@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/CardItem"
+    style="?attr/materialCardViewFilledStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardCornerRadius="12dp"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/empty_divider"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <TextView
+
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="start"
+            android:text="Справка У-30"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0"
+                android:visibility="visible"
+                app:srcCompat="@drawable/event"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="02.09.2021г"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/person_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/group"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Дегтярева Е. А.\nстарший инспектор-специалист\nдеканат РЭФ"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="id"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+
+            <TextView
+
+                android:id="@+id/number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="65553"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/empty_divider_horizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/done"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Готово"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/remove"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Удалить заявку"
+            android:textColor="?attr/colorError"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
